@@ -1,0 +1,84 @@
+// Use DBML to define your database structure
+// Docs: https://dbml.dbdiagram.io/docs
+
+
+Table users {
+  id serial [primary key]
+  username varchar(30)
+  created_at timestamp
+  uptated_at timestamp
+  bio varchar(400)
+  avatar varchar(200)
+  phone varchar(25)
+  email varchar(40)
+  password varchar(50)
+  status varchar(15)
+
+}
+
+Table posts {
+  id integer [primary key]
+  created_at timestamp
+  uptated_at timestamp
+  photo_url Varchar(200)
+  user_id integer [ref: > users.id] 
+  caption varchar(400)
+  lat real
+  long real
+}
+
+Table followers {
+  id serial [primary key]
+  leader_id integer [ref: > users.id] 
+  follower_id integer [ref: > users.id] 
+  created_at timestamp 
+}
+
+
+Table comments {
+  id serial [primary key]
+  created_at timestamp
+  uptated_at timestamp
+  contests Varchar(240)
+  user_id integer [ref: > users.id] 
+  post_id integer [ref: > posts.id] 
+}
+
+Table likes {
+  id serial [primary key]
+  created_at timestamp
+  user_id integer [ref: > users.id] 
+  post_id integer [ref: > posts.id] 
+  comment_id integer [ref: > comments.id] 
+  }
+
+Table caption_tags {
+  id serial [primary key]
+  created_at timestamp
+  user_id integer [ref: > users.id] 
+  post_id integer [ref: > posts.id]  
+  }
+
+Table photo_tags {
+  id serial [primary key]
+  created_at timestamp
+  uptated_at timestamp
+  user_id integer [ref: > users.id] 
+  post_id integer [ref: > posts.id]  
+  x integer 
+  y integer
+  }
+
+
+Table hastags {
+  id serial [primary key]
+  created_at timestamp
+  title Varcahr(20)
+  }
+
+  
+Table hastag_posts {
+  id serial [primary key]
+  post_id integer [ref: > posts.id]  
+  hashtag_id integer [ref: > hastags.id] 
+  }
