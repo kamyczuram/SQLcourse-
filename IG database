@@ -1,0 +1,84 @@
+CREATE TABLE users (
+	id SERIAL PRIMARY KEY,
+	username VARCHAR(30) UNIQUE CHECK(char_length(username) > 6),
+	created_at TIMESTAMP,
+	updated_ad TIMESTAMP,
+	bio VARCHAR(400),
+	avatar VARCHAR(200),
+	phone VARCHAR(25),
+	email VARCHAR(40),
+	password VARCHAR(50) CHECK(char_length(username) > 6),
+	status VARCHAR(15)
+); 
+
+CREATE TABLE posts (
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	updated_ad TIMESTAMP,
+	photo_url VARCHAR(200),
+	caption VARCHAR(400),
+	lat real,
+	long real,
+	user_id INTEGER REFERENCES users(id)
+); 
+
+CREATE TABLE followers(
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	leader_id INTEGER REFERENCES users(id),
+	follower_id INTEGER REFERENCES users(id)
+  CONSTRAINT unique_pair UNIQUE(leader_id, follower_id)
+); 
+
+CREATE TABLE comments(
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	updated_at TIMESTAMP,
+	contests VARCHAR(240),
+	user_id INTEGER REFERENCES users(id),
+	post_id INTEGER REFERENCES posts(id)
+); 
+
+
+CREATE TABLE likes(
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	user_id INTEGER REFERENCES users(id),
+	post_id INTEGER REFERENCES posts(id),
+	comment_id INTEGER REFERENCES comments(id)
+	CONSTRAINT one_null CHECK(
+	(user_id IS NULL  AND post_id IS NOT NULL)
+	OR
+	(user_id IS NOT NULL  AND post_id IS  NULL) 
+	)
+); 
+
+CREATE TABLE caption_tags(
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	user_id INTEGER REFERENCES users(id),
+	post_id INTEGER REFERENCES posts(id)
+); 
+
+CREATE TABLE photo_tags(
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	user_id INTEGER REFERENCES users(id),
+	post_id INTEGER REFERENCES posts(id),
+	x INTEGER NOT NULL,
+	y INTEGER NOT NULL
+); 
+
+
+CREATE TABLE hastags(
+	id SERIAL PRIMARY KEY,
+	created_at TIMESTAMP,
+	title VARCHAR(20)
+); 
+
+CREATE TABLE hastag_posts(
+	id SERIAL PRIMARY KEY,
+	hashtag_id INTEGER REFERENCES hastags(id),
+	post_id INTEGER REFERENCES posts(id)
+); 
+
